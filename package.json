@@ -1,0 +1,37 @@
+{
+  "name": "rterm-server",
+  "version": "1.0.0",
+  "description": "- Remote terminal project",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "dev": "env-cmd -f .env.development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "prod": "env-cmd -f .env.production node src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rterm/rterm-server.git"
+  },
+  "author": "Ly Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rterm/rterm-server/issues"
+  },
+  "homepage": "https://github.com/rterm/rterm-server#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "eslint": "^7.12.0",
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1"
+  }
+}
