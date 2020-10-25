@@ -43,6 +43,7 @@ npm-debug.log.*
 *.scss.d.ts
 
 # Environments
+.env
 .env.*
 
 yarn.lock
