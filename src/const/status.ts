@@ -1,0 +1,9 @@
+export const SUCCESS = 0;
+export const ERROR = 1;
+export const UNKNOWN = 1001;
+export const GG_OAUTH_FAILED = 1002;
+export const DB_TABLE_EXIST = 2001;
+export const DB_TABLE_NOT_EXIST = 2002;
+export const DB_SYNTAX_ERROR = 2003;
+export const DB_COL_NOT_EXIST = 2004;
+export const TAB_DUPL_KEY = 2005;

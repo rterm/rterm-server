@@ -1,30 +1,48 @@
-const router = (global as any).express.Router();
+import * as GlobalVariables from "../utils/GlobalVariables";
+import * as status from "../const/status";
+
+const NodePassport = require("../passport/setup");
+const router = GlobalVariables.express.Router();
 
 router.get("/login", function(req: any, res: any, next: any) {
   console.log("/login");
-  res.end("");
+  res.end("OK");
 });
 
-router.get(
-  "/google",
-  (global as any).passport.authenticate("google", { scope: ["profile", "email"] }),
-);
+router.get("/user", async function(req: any, res: any) {
+  console.log(req.session);
+  console.log(req.user);
+  console.log(req.session.passport);
+  console.log(req.session.user);
+  return res.json({
+    status: status.SUCCESS,
+    msg: "user",
+  });
+});
 
-// router.get(
-//   "/google/callback",
-//   (global as any).passport.authenticate("google", { failureRedirect: "/error" }),
-//   function(req: any, res: any) {
-//     // Successful authentication, redirect success.
-//     res.redirect("/success");
-//   },
-// );
+router.get("/google", NodePassport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/api/v1/auth/google/success",
-    failureRedirect: "/api/v1/auth/google/failure",
+  NodePassport.authenticate("google", {
+    successRedirect: `${process.env.API_PATH}/auth/google/success`,
+    failureRedirect: `${process.env.API_PATH}/auth/google/failure`,
   }),
 );
+
+router.get("/google/success", async function(req: any, res: any) {
+  return res.json({
+    status: 0,
+    msg: "Google login successfully",
+  });
+});
+
+router.get("/google/failure", async function(req: any, res: any) {
+  return res.json({
+    status: status.ERROR,
+    code: status.GG_OAUTH_FAILED,
+    msg: "Login error",
+  });
+});
 
 module.exports = router;
