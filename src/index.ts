@@ -4,8 +4,11 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const NodePassport = require("./passport/setup");
+// const { defineAbilityFor } = require("./utils/abilities");
+import logger from "./utils/logger";
 
 const app = express();
+app.use(express.static("public"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,8 +24,12 @@ app.use(
 
 app.use(NodePassport.initialize());
 app.use(NodePassport.session());
+app.use((req: any, _: any, next: any) => {
+  // req.ability = defineAbilityFor(req.user);
+  logger.info("user", req.user);
+  next();
+});
 app.use(process.env.API_PATH + "/auth", require("./routes/auth"));
-app.use(express.static("public"));
 
 const server = app.listen(process.env.PORT, () =>
   console.log(`Server listening at http://${process.env.HOST}:${process.env.PORT}`),

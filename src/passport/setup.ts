@@ -1,13 +1,14 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
+import logger from "../utils/logger";
 
 passport.serializeUser(function(user: any, done: any) {
-  console.log("passport.serializeUser: user", user.email);
+  logger.info("passport.serializeUser: user", user.email);
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id: any, done: any) {
-  console.log("passport.deserializeUser: id", id);
+  logger.info("passport.deserializeUser: id", id);
   // User.findById(id, (err: any, user: any) => {
   //   done(err, user)
   // })
@@ -25,10 +26,10 @@ passport.use(
       passReqToCallback: true,
     },
     function(request: any, accessToken: any, refreshToken: any, profile: any, done: any) {
-      console.log("GG login");
-      console.log("accessToken", accessToken);
-      console.log("refreshToken", refreshToken);
-      console.log("profile", profile);
+      logger.info("GG login");
+      logger.info("accessToken", accessToken);
+      logger.info("refreshToken", refreshToken);
+      logger.info("profile", profile);
       return done(null, profile);
       // User.findOrCreate({ googleId: profile.id }, function (err, user) {
       //   return done(err, user);

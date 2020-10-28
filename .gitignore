@@ -47,3 +47,5 @@ npm-debug.log.*
 .env.*
 
 yarn.lock
+
+logs

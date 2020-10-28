@@ -1,19 +1,19 @@
-import * as GlobalVariables from "../utils/GlobalVariables";
 import * as status from "../const/status";
-
+const express = require("express");
+import logger from "../utils/logger";
 const NodePassport = require("../passport/setup");
-const router = GlobalVariables.express.Router();
+const router = express.Router();
 
 router.get("/login", function(req: any, res: any, next: any) {
-  console.log("/login");
+  logger.info("/login");
   res.end("OK");
 });
 
 router.get("/user", async function(req: any, res: any) {
-  console.log(req.session);
-  console.log(req.user);
-  console.log(req.session.passport);
-  console.log(req.session.user);
+  logger.info(req.session);
+  logger.info(req.user);
+  logger.info(req.session.passport);
+  logger.info(req.session.user);
   return res.json({
     status: status.SUCCESS,
     msg: "user",
