@@ -1,20 +1,26 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
+const { User } = require("../utils/db");
+import * as JwtToken from "../utils/JwtToken";
 import logger from "../utils/logger";
 
-passport.serializeUser(function(user: any, done: any) {
-  logger.info("passport.serializeUser: user", user.email);
+passport.serializeUser(async function (user: any, done: any) {
+  const CurrentUser = await User.findOne({ where: { email: user.email } });
+  CurrentUser._id = user.id;
+  await CurrentUser.save();
+
+  // const Token = JwtToken.generateJWT({
+  //   id: CurrentUser.id,
+  //   username: CurrentUser.username,
+  //   email: CurrentUser.email,
+  // });
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id: any, done: any) {
-  logger.info("passport.deserializeUser: id", id);
-  // User.findById(id, (err: any, user: any) => {
-  //   done(err, user)
-  // })
-  done(null, { user: "Lee" });
-
-  // done(null, id);
+passport.deserializeUser(async function (id: any, done: any) {
+  console.log("deserializeUser", id);
+  const CurrentUser = await User.findOne({ where: { _id: id } });
+  done(null, { user: CurrentUser });
 });
 
 passport.use(
@@ -25,15 +31,17 @@ passport.use(
       callbackURL: `${process.env.BASE_URL}${process.env.API_PATH}/auth/google/callback`,
       passReqToCallback: true,
     },
-    function(request: any, accessToken: any, refreshToken: any, profile: any, done: any) {
-      logger.info("GG login");
-      logger.info("accessToken", accessToken);
-      logger.info("refreshToken", refreshToken);
-      logger.info("profile", profile);
+    async function (request: any, accessToken: any, refreshToken: any, profile: any, done: any) {
+      const newuser = await User.findOne({ where: { email: profile.email } });
+      if (newuser === null) {
+        const user = new User();
+        user.username = profile.displayName;
+        user.email = profile.email;
+        user.emailVerifiedId = profile.email_verified;
+        await user.save();
+      }
+
       return done(null, profile);
-      // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      //   return done(err, user);
-      // });
     },
   ),
 );

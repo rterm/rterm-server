@@ -17,9 +17,4 @@ const logger = createLogger({
   ],
 });
 
-logger.info("Use a helper method if you want", {
-  additional: "properties",
-  are: "passed along",
-});
-
 export = logger;

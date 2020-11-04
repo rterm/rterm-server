@@ -47,11 +47,7 @@ function defineWriterRules(user: any, can: any) {
 }
 
 function defineAnonymousRules(_: any, can: any) {
-  can("read", ["Article", "Comment"], { published: true });
+  // can("read", ["Article", "Comment"], ["a", "b"], { published: true });
+  can("read", "User");
+  can("read");
 }
-
-// module.exports = {
-//   defineRulesFor,
-//   defineAbilityFor,
-// };
-// export defineRulesFor = defineRulesFor;

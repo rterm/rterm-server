@@ -4,12 +4,13 @@ import logger from "../utils/logger";
 const NodePassport = require("../passport/setup");
 const router = express.Router();
 
-router.get("/login", function(req: any, res: any, next: any) {
-  logger.info("/login");
+router.get("/login", function (req: any, res: any, next: any) {
+  console.log("user", req.user);
+  console.log(req.ability.can("read"));
   res.end("OK");
 });
 
-router.get("/user", async function(req: any, res: any) {
+router.get("/user", async function (req: any, res: any) {
   logger.info(req.session);
   logger.info(req.user);
   logger.info(req.session.passport);
@@ -30,14 +31,14 @@ router.get(
   }),
 );
 
-router.get("/google/success", async function(req: any, res: any) {
+router.get("/google/success", async function (req: any, res: any) {
   return res.json({
     status: 0,
     msg: "Google login successfully",
   });
 });
 
-router.get("/google/failure", async function(req: any, res: any) {
+router.get("/google/failure", async function (req: any, res: any) {
   return res.json({
     status: status.ERROR,
     code: status.GG_OAUTH_FAILED,

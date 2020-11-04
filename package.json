@@ -2,14 +2,13 @@
   "name": "rterm-server",
   "version": "1.0.0",
   "description": "- Remote terminal project",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "start": "tsc && node dist/index.js",
     "dev": "env-cmd -f .env.development nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "prod": "env-cmd -f .env.production node src/index.ts",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "mytest": "node main.ts"
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -39,6 +38,7 @@
     "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-google-oauth2": "^0.2.0",
     "sequelize": "^6.3.5",

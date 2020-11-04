@@ -4,8 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const NodePassport = require("./passport/setup");
-// const { defineAbilityFor } = require("./utils/abilities");
-import logger from "./utils/logger";
+import { defineAbilityFor } from "./utils/abilities";
 
 const app = express();
 app.use(express.static("public"));
@@ -25,8 +24,8 @@ app.use(
 app.use(NodePassport.initialize());
 app.use(NodePassport.session());
 app.use((req: any, _: any, next: any) => {
-  // req.ability = defineAbilityFor(req.user);
-  logger.info("user", req.user);
+  req.user = { role: "guest" };
+  req.ability = defineAbilityFor(req.user);
   next();
 });
 app.use(process.env.API_PATH + "/auth", require("./routes/auth"));
