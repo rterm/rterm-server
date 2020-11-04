@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.get("/login", function (req: any, res: any, next: any) {
   console.log("user", req.user);
-  console.log(req.ability.can("read"));
   res.end("OK");
 });
 
