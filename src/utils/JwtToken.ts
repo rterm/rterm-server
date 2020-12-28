@@ -41,7 +41,7 @@ export function generateJWT(user: any) {
 
   return sign({
     id: user.id,
-    username: user.username,
+    username: user.displayName,
     email: user.email,
     exp: exp.getTime() / 1000,
   });
@@ -49,7 +49,7 @@ export function generateJWT(user: any) {
 
 export function toAuthJSON(user: any) {
   return {
-    username: user.username,
+    displayName: user.displayName,
     email: user.email,
     token: generateJWT(user),
     bio: user.bio,
