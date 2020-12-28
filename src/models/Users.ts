@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { DataTypes } = require("sequelize");
+import { DataTypes } from "sequelize";
 
 export = (sequelize: any) => {
   var User = sequelize.define("users", {
@@ -8,11 +8,13 @@ export = (sequelize: any) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    _id: {
-      type: DataTypes.STRING(32),
-      unique: true,
+    displayName: {
+      type: DataTypes.STRING(36),
     },
-    username: {
+    givenName: {
+      type: DataTypes.STRING(36),
+    },
+    familyName: {
       type: DataTypes.STRING(36),
     },
     email: {
