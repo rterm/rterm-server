@@ -1,27 +1,37 @@
 const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 const { User } = require("../utils/db");
-import * as JwtToken from "../utils/JwtToken";
+import * as jwttoken from "../utils/JwtToken";
 import logger from "../utils/logger";
 
 passport.serializeUser(async function (user: any, done: any) {
+  console.log("serializeUser", user.email);
   const CurrentUser = await User.findOne({ where: { email: user.email } });
-  CurrentUser._id = user.id;
-  await CurrentUser.save();
-
-  // const Token = JwtToken.generateJWT({
-  //   id: CurrentUser.id,
-  //   username: CurrentUser.username,
-  //   email: CurrentUser.email,
-  // });
-  done(null, user.id);
+  done(null, CurrentUser.id);
 });
 
 passport.deserializeUser(async function (id: any, done: any) {
   console.log("deserializeUser", id);
-  const CurrentUser = await User.findOne({ where: { _id: id } });
-  done(null, { user: CurrentUser });
+  const CurrentUser = await User.findOne({ where: { id: id } });
+  done(null, CurrentUser.dataValues);
 });
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email" },
+    async (email: string, password: string, done: any) => {
+      const user = await User.findOne({ where: { email: email } });
+      if (user === null) {
+        return done(null, false, { message: "Incorrect email." });
+      }
+      if (!jwttoken.validPassword(user, password)) {
+        return done(null, false, { message: "Incorrect password." });
+      }
+      return done(null, user);
+    },
+  ),
+);
 
 passport.use(
   new GoogleStrategy(
@@ -35,13 +45,16 @@ passport.use(
       const newuser = await User.findOne({ where: { email: profile.email } });
       if (newuser === null) {
         const user = new User();
-        user.username = profile.displayName;
+        user.displayName = profile.displayName;
+        user.givenName = profile.given_name;
+        user.familyName = profile.family_name;
         user.email = profile.email;
-        user.emailVerifiedId = profile.email_verified;
+        user.emailVerified = profile.email_verified;
         await user.save();
+        return done(null, user);
       }
 
-      return done(null, profile);
+      return done(null, newuser);
     },
   ),
 );
